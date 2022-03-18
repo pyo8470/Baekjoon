@@ -1,5 +1,3 @@
-# https://replit.com/@pyo8470/ExaltedFrightenedVolcano#main.py:1:0
-
 # 숫자 9,6은 서로 같다고 본다
 # 9 = 1 -> 1
 # 9 = 2 -> 2/2 = 1 
