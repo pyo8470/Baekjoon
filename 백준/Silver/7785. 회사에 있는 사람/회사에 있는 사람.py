@@ -1,7 +1,8 @@
 N = int(input())
+import sys
 people = set()
 for i in range(N):
-    person, goOut = input().split()
+    person, goOut = sys.stdin.readline().split()
     if goOut == "enter":
         people.add(person)
     else :
