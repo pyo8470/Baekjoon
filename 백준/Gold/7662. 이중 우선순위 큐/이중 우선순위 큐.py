@@ -17,12 +17,14 @@ for _ in range(int(input())):
             visit[i] = True
         
         else:
+            ## 최댓값 삭제
             if num == 1:
                 while maxHeap and not visit[maxHeap[0][1]]:
                     heapq.heappop(maxHeap)
                 if maxHeap:
                     visit[maxHeap[0][1]] = False
                     heapq.heappop(maxHeap)
+            ## 최솟값 삭제
             else:
                 while minHeap and not visit[minHeap[0][1]]:
                     heapq.heappop(minHeap)
