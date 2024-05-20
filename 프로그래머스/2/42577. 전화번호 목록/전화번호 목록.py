@@ -1,8 +1,8 @@
 def solution(phone_book):
     
-    ## 접두어 인 경우
     s = set()
-    phone_book.sort()
+    ## 짧은 것부터 넣어야 된다 -> 따라서 길이순 정렬
+    phone_book.sort(key=len)
     s.add(phone_book[0])
     for i in phone_book[1:]:
         number = ''
