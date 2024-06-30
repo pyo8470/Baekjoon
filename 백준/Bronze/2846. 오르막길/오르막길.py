@@ -1,24 +1,18 @@
 import sys
 input = sys.stdin.readline
+
 N = int(input())
+height = list(map(int, input().split()))
 
-height = list(map(int,input().split()))
 last = height[0]
-upstairs = []
-current = []
-for i in range(1,N):
+max_diff = 0
+current_start = last
 
-    if last < height[i]:
-        current.append(last)
-        current.append(height[i])
+for i in range(1, N):
+    if height[i] > last:
+        max_diff = max(max_diff, height[i] - current_start)
     else:
-        if current:
-            upstairs.append(current)
-        current=[]
+        current_start = height[i]
     last = height[i]
-if current:
-    upstairs.append(current)
-answer = 0
-for i in upstairs:
-    answer = max(answer,i[-1]-i[0])
-print(answer)
+
+print(max_diff)
