@@ -1,20 +1,21 @@
 import sys
-N, M = map(int, sys.stdin.readline().rstrip().split())
-Trees=list(map(int, sys.stdin.readline().rstrip().split()))
+input = sys.stdin.readline
 
-top= max(Trees)
+N,M = map(int,input().split())
+woods = list(map(int,input().split()))
+top = max(woods)
 bottom = 0
-result = 0
-while(bottom<top):
-    cutting = (bottom+top) //2
-    TotalHeight=0
-    for i in Trees:
-        currentH=i - cutting
-        if currentH >= 0:
-            TotalHeight += currentH
-    if TotalHeight >= M:
-        result = max(cutting,result)
-        bottom = cutting + 1
-    elif TotalHeight <M:
-        top = cutting
-print(result)
+answer = 0
+while bottom<=top:
+    cut = (top+bottom)//2
+    total = 0
+    for height in woods:
+        if height > cut:
+            total+=(height - cut)
+    if total >= M :
+        ## 더 자른 경우
+        answer = max(cut,answer)
+        bottom = cut + 1
+    else:
+        top = cut - 1
+print(answer)
