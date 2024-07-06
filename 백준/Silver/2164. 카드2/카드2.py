@@ -1,9 +1,10 @@
-N = int(input())
-# 1~N 까지의 카드
+import sys
 from collections import deque
-queue = deque(i for i in range(1,N+1))
-while len(queue) > 1:
-    queue.popleft()
-    back = queue.popleft()
-    queue.append(back)
-print(queue[0])
+input = sys.stdin.readline
+N= int(input())
+queue = deque([i for i in range(N,0,-1)])
+while len(queue) >=2 :
+    queue.pop()
+    k = queue.pop()
+    queue.appendleft(k)
+print(*queue)
