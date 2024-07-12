@@ -1,27 +1,32 @@
-import sys    
-sys.setrecursionlimit(5_000)  # 좀 넉넉하게, 더 크게 주셔도 됩니다.
-def dfs(x,y):
-    # 범위 벗어난 경우
-    if x<0 or y<0 or x>=M or y>=N:
-        return False
-    if Grid[y][x] == 1:
-        Grid[y][x] = 0
-        dfs(x+1,y)
-        dfs(x-1,y)
-        dfs(x,y+1)
-        dfs(x,y-1)
-        return True
-    return False
-T=int(input())
-for i in range(T):
-    result =0
-    M,N,K =map(int,input().split())
-    Grid = [[0 for i in range(M)]for j in range(N)]
+import sys
+from collections import deque
+input = sys.stdin.readline
+direction = [(1,0),(-1,0),(0,1),(0,-1)]
+
+def bfs(x,y):
+    queue = deque([(x, y)])
+    visited[y][x] = 1
+    while queue:
+        
+        x,y = queue.popleft()
+        for dx,dy in direction:
+            nx,ny = x+dx,y+dy
+            if 0<=nx<M and 0<=ny<N and farmland[ny][nx] and not visited[ny][nx]:
+                visited[ny][nx] = 1
+                queue.append((nx,ny))
+            
+direction = [(1,0),(-1,0),(0,1),(0,-1)]
+for i in range(int(input())):
+    M,N,K = map(int,input().split())
+    farmland = [[0]*M for i in range(N)]
+    visited = [[0]*M for i in range(N)]
+    count = 0
     for i in range(K):
-        Y,X=map(int,input().split())
-        Grid[X][Y]=1
-    for i in range(M):
-        for j in range(N):
-            if dfs(i,j) == True:
-                result += 1
-    print(result)
+        x,y = map(int,input().split())
+        farmland[y][x] = 1
+    for y in range(N):
+        for x in range(M):
+            if farmland[y][x] and not visited[y][x]:
+                bfs(x,y)
+                count+=1
+    print(count)
