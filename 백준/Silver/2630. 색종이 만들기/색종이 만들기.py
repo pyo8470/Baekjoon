@@ -1,28 +1,27 @@
-N = int(input())
-papers = []
-for i in range(N):
-    papers.append(list(map(int,input().split())))
-blue,white = 0,0
+import sys
+input = sys.stdin.readline
 
-def solution(x,y,N):
-    start_color = papers[y][x]
-    for i in range(x, x+N):
-        for j in range(y, y+N):
-            ## 색이 같지 않을 경우 분할
-            if start_color != papers[j][i]:
-                solution(x,y,N//2)
-                solution(x+N//2,y,N//2)
-                solution(x,y+N//2,N//2)
-                solution(x+N//2,y+N//2,N//2)
+N = int(input())
+paper = [list(map(int,input().split())) for i in range(N)]
+blue, white = 0,0
+
+def div_con(x,y,n):
+    global blue, white
+    ## 같은색이 아니면 자름
+    start = paper[y][x]
+    for nx in range(x,x+n):
+        for ny in range(y,y+n):
+            if start != paper[ny][nx]:
+                div_con(x,y,n//2)
+                div_con(x+n//2,y,n//2)
+                div_con(x,y+n//2,n//2)
+                div_con(x+n//2,y+n//2,n//2)
                 return
-    ## 색이 같은 경우
-    if start_color == 1:
-        global blue
+    ## 색이 같음
+    if start == 1:
         blue += 1
     else:
-        global white
-        white += 1
-    
-solution(0,0,N)
+        white +=1
+div_con(0,0,N)
 print(white)
 print(blue)
