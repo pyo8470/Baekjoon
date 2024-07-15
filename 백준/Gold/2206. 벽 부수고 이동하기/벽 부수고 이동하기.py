@@ -20,11 +20,12 @@ while queue:
     for dx, dy in direction:
         nx, ny = x + dx, y + dy
 
-        if 0 <= nx < M and 0 <= ny < N and (nx,ny,broken) not in visited:
-            if board[ny][nx] == 0:
-                queue.append((nx, ny, count + 1, broken))
-                visited.add((nx,ny,broken))
-            elif not broken:
-                queue.append((nx,ny,count+1,True))
-                visited.add((nx,ny,True))
+        if 0 > nx or M <= nx or 0 > ny or N <= ny or (nx,ny,broken) in visited:
+            continue
+        if board[ny][nx] == 0:
+            queue.append((nx, ny, count + 1, broken))
+            visited.add((nx,ny,broken))
+        elif not broken:
+            queue.append((nx,ny,count+1,True))
+            visited.add((nx,ny,True))
 print(answer)
