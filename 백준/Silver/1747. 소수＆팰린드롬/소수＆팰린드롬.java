@@ -19,8 +19,9 @@ public class Main {
     private static int solution(int N){
         if (N == 1) return 2;
         for (int i = N; i <= 1_000_000_000 ; i++) {
-            if(isPrime(i)){
-                if(isPalindrome(i)){
+            // 검사 순서 최적화 -> 팰린드롬:O(문자열 길이 : d), 소수 검사:O(log(N))
+            if(isPalindrome(i)){ //  
+                if(isPrime(i)){ // O
                     return i;
                 }
             }
