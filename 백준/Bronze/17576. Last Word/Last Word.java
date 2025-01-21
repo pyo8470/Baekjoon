@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         // BufferedReader br = new BufferedReader(new FileReader("input.txt"));
-        StringBuilder answer = new StringBuilder(br.readLine().strip());
+        StringBuilder input = new StringBuilder(br.readLine().strip());
         int N = Integer.parseInt(br.readLine());
         int s = 0, e = 0;
         for (int i = 0; i < N; i++) {
@@ -17,7 +17,7 @@ public class Main {
             s += Integer.parseInt(st.nextToken());
             e = Integer.parseInt(st.nextToken());
         }
-        answer = new StringBuilder(answer.subSequence(s, s + e));
+        String answer = input.substring(s, s + e);
         System.out.println(answer);
     }
 }
