@@ -4,61 +4,50 @@ using namespace std;
 
 int main()
 {
-    int T;
-    cin >> T;
+    int tc;
+    cin >> tc;
 
-    stack<char> cursorLeft;
-    stack<char> cursorRight;
-
-    for (int i = 0; i < T; i++)
+    for (int t = 0; t < tc; t++)
     {
         string input;
         cin >> input;
+        deque<char> left;
+        deque<char> right;
         for (char ch : input)
         {
             if (ch == '<')
             {
-                if (!cursorLeft.empty())
+                if (!left.empty())
                 {
-                    cursorRight.push(cursorLeft.top());
-                    cursorLeft.pop();
+                    right.push_front(left.back());
+                    left.pop_back();
                 }
             }
             else if (ch == '>')
             {
-                if (!cursorRight.empty())
+                if (!right.empty())
                 {
-                    cursorLeft.push(cursorRight.top());
-                    cursorRight.pop();
+                    left.push_back(right.front());
+                    right.pop_front();
                 }
             }
             else if (ch == '-')
             {
-                if (!cursorLeft.empty())
-                {
-                    cursorLeft.pop();
-                }
+                if (!left.empty())
+                    left.pop_back();
             }
             else
             {
-                cursorLeft.push(ch);
+                left.push_back(ch);
             }
         }
-        stack<char> printLeft;
-        while (!cursorLeft.empty())
+        for (char ch : left)
         {
-            printLeft.push(cursorLeft.top());
-            cursorLeft.pop();
+            cout << ch;
         }
-        while (!printLeft.empty())
+        for (char ch : right)
         {
-            cout << printLeft.top();
-            printLeft.pop();
-        }
-        while (!cursorRight.empty())
-        {
-            cout << cursorRight.top();
-            cursorRight.pop();
+            cout << ch;
         }
         cout << endl;
     }
