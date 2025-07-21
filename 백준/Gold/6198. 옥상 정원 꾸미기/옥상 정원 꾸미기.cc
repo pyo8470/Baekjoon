@@ -20,19 +20,15 @@ int main() {
 	}
 	stack<int> st;
 	long long result = 0;
-	for (int i = 0; i < n; i++) {
-		height = tower[i];
-
-		while (!st.empty() && st.top() <= height) {
+	st.push(tower[0]);
+	for(int i=1; i<n; i++){
+		//top이 볼 수 없는 높이
+		while (!st.empty() && st.top() <= tower[i]) {
+			//지워
 			st.pop();
-			result += st.size();
 		}
-
-		st.push(height);
-	}
-	while (!st.empty()) {
-		st.pop();
 		result += st.size();
+		st.push(tower[i]);
 	}
 	cout << result;
 }
