@@ -1,72 +1,44 @@
-#include <bits/stdc++.h>
-#include <climits>
-#include <string>
+#include <iostream>
 using namespace std;
+#include <string>
+#include <deque>
+int main() {
+	string str; cin >> str;
+	int M; cin >> M;
+	deque<char> left;
+	for (int i = 0; i < str.size(); i++) {
+		left.push_back(str[i]);
+	}
 
-int main()
-{
-
-    stack<char> cursorLeft;
-    stack<char> cursorRight;
-
-    string input, order;
-    int M;
-    cin >> input >> M;
-    for (int i = 0; i < input.length(); i++)
-    {
-        cursorLeft.push(input[i]);
-    }
-    for (int i = 0; i < M; i++)
-    {
-        cin >> order;
-        if (order == "L")
-        {
-            if (!cursorLeft.empty())
-            {
-                cursorRight.push(cursorLeft.top());
-                cursorLeft.pop();
-            }
-        }
-        else if (order == "D")
-        {
-            if (!cursorRight.empty())
-            {
-                cursorLeft.push(cursorRight.top());
-                cursorRight.pop();
-            }
-        }
-        else if (order == "B")
-        {
-            if (!cursorLeft.empty())
-            {
-                cursorLeft.pop();
-            }
-        }
-        else if (order == "P")
-        {
-            char ch;
-            cin >> ch;
-            cursorLeft.push(ch);
-        }
-    }
-
-    stack<char> print;
-
-    while (!cursorLeft.empty())
-    {
-        print.push(cursorLeft.top());
-        cursorLeft.pop();
-    }
-
-    while (!print.empty())
-    {
-        cout << print.top();
-        print.pop();
-    }
-
-    while (!cursorRight.empty())
-    {
-        cout << cursorRight.top();
-        cursorRight.pop();
-    }
+	deque<char> right;
+	for (int t = 0; t < M; t++) {
+		char command; cin >> command;
+		if (command == 'L') {
+			if (!left.empty()) {
+				right.push_front(left.back());
+				left.pop_back();
+			}
+		}
+		else if (command == 'D') {
+			if (!right.empty()) {
+				left.push_back(right.front());
+				right.pop_front();
+			}
+		}
+		else if (command == 'B') {
+			if (!left.empty()) {
+				left.pop_back();
+			}
+		}
+		else {
+			char ch; cin >> ch;
+			left.push_back(ch);
+		}
+	}
+	for (int i = 0; i < left.size(); i++) {
+		cout << left[i];
+	}
+	for (int i = 0; i < right.size(); i++) {
+		cout << right[i];
+	}
 }
