@@ -1,52 +1,55 @@
-#include <bits/stdc++.h>
-#include <climits>
+#include <iostream>
 using namespace std;
+#include <string>
+#include <vector>
+#include <stack>
+#include <unordered_set>
 
-int main()
-{
-    deque<int> q;
 
-    int N, M;
-    cin >> N >> M;
-    for (int i = 1; i <= N; i++)
-    {
-        q.push_back(i);
-    }
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
-    int result = 0;
-    for (int i = 0; i < M; i++)
-    {
-        int target;
-        cin >> target;
+	int N; cin >> N;
+	int M; cin >> M;
 
-        int index = 0;
-        for (; index < q.size(); index++)
-        {
-            if (q[index] == target)
-                break;
-        }
+	deque<int> dq(N);
+	for (int i = 1; i <= N; i++) {
+		dq[i - 1] = i;
+	}
 
-        if (index <= q.size() / 2)
-        {
-            // 왼쪽으로 이동
-            while (q.front() != target)
-            {
-                q.push_back(q.front());
-                q.pop_front();
-                result++;
-            }
-        }
-        else
-        {
-            while (q.front() != target)
-            {
-                q.push_front(q.back());
-                q.pop_back();
-                result++;
-            }
-        }
+	int result = 0;
+	for (int i = 0; i < M; i++) {
+		int target; cin >> target;
 
-        q.pop_front();
-    }
-    cout << result;
+		int index = 0;
+
+		for (; index < dq.size(); index++) {
+			if (dq[index] == target) {
+				break;
+			}
+		}
+
+		// 오른쪽 이동
+		if (index > (dq.size() / 2)) {
+			while (dq.front() != target) {
+				result++;
+				dq.push_front(dq.back());
+				dq.pop_back();
+			}
+			dq.pop_front();
+		}
+		// 왼쪽 이동
+		else {
+			while (dq.front() != target) {
+				result++;
+				dq.push_back(dq.front());
+				dq.pop_front();
+			}
+			dq.pop_front();
+		}
+		
+	}
+	cout << result;
 }
