@@ -1,73 +1,61 @@
-#include<iostream>
-#include<vector>
-#include<algorithm>
-#include<cmath>
- using namespace std;
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
 int main() {
-	ios_base::sync_with_stdio(0);
-	cin.tie(NULL);
-	int N; cin >> N;
-	vector<int> arr(N);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-	int K = 8001;                          // -4000 ~ 4000 총 8001개
-	vector<int> countingArr(8001, 0);      // 카운팅 배열 (빈도수)
-	vector<int> sorted(N);                // 정렬된 결과 저장
-	double sum = 0;
+    int N;
+    cin >> N;
+    vector<int> countingArr(8001, 0); // -4000~4000
 
-	// 선택 정렬
-	int maxFreq = 0;
-	for (int i = 0; i < N; i++) {
-		cin >> arr[i];
-		sum += arr[i];
-		countingArr[arr[i] + 4000] += 1;   // -4000 ~ 4000 → 0 ~ 8000 인덱스로 매핑
-	}
-	//범위 O(K)
-	int left = 0;
-	for (int i = 0; i < K; i++) {
-		if (countingArr[i] != 0) {
-			left = i - 4000; break;
-		};
-	}
-	int right = 0;
-	for (int i = K - 1; i >= 0; i--) {
-		if (countingArr[i] != 0) {
-			right = i - 4000; break;
-		}
-	}
-	// 최빈값 구하기
-	for (int i = 0; i < K; i++) {
-		maxFreq = max(maxFreq, countingArr[i]);
-	}
-	vector<int> freq;
-	for (int i = 0; i < K; i++) {
-		if (maxFreq == countingArr[i]) {
-			freq.push_back(i -4000);
-		}
-	}
-	// 중앙값
-	for (int i = 1; i < K; i++) {
-		countingArr[i] += countingArr[i - 1];
-	}
-	for (int i = N - 1; i >= 0; i--) {
-		int val = arr[i] + 4000;
-		sorted[countingArr[val] - 1] = arr[i];  // 실제 값 저장
-		countingArr[val] -= 1;
-	}
+    int sum = 0;
+    int minVal = 4001, maxVal = -4001;
+    int maxFreq = 0;
 
-	/*cout << endl;
+    // 입력 및 카운트 + 통계용 준비
+    for (int i = 0; i < N; i++) {
+        int x;
+        cin >> x;
+        sum += x;
+        int idx = x + 4000;
+        countingArr[idx]++;
 
-	for (int i = 0; i < freq.size(); i++) {
-		cout << freq[i] << " ";
-	}
-	cout << endl;*/
-	// 산술 평균
-	double avg = round((double)(sum) / N);
-	(avg == -0) ? avg = 0 : 1;
-	cout << avg << '\n';
-	// 중앙값 구하기
-	cout << sorted[N / 2] << '\n';
-	
-	(freq.size() > 1) ? cout << freq[1] << '\n' : cout << freq[0] << '\n';
-	// 범위
-	cout << right - left << '\n';
+        maxFreq = max(maxFreq, countingArr[idx]);
+        minVal = min(minVal, x);
+        maxVal = max(maxVal, x);
+    }
+
+    // 산술 평균
+
+    int avg = round((double)sum / N);
+    if (avg == -0) avg = 0; // -0 처리
+    cout << avg << '\n';
+
+    // 중앙값: 누적합만으로 해결
+    int midCount = (N + 1) / 2;
+    int median = 0;
+    int cnt = 0;
+    for (int i = 0; i < 8001; i++) {
+        cnt += countingArr[i];
+        if (cnt >= midCount) {
+            median = i - 4000;
+            break;
+        }
+    }
+    cout << median << '\n';
+
+    // 최빈값
+    vector<int> modeList;
+    for (int i = 0; i < 8001; i++) {
+        if (countingArr[i] == maxFreq) {
+            modeList.push_back(i - 4000);
+        }
+    }
+    cout << (modeList.size() > 1 ? modeList[1] : modeList[0]) << '\n';
+
+    // 범위
+    cout << maxVal - minVal << '\n';
 }
