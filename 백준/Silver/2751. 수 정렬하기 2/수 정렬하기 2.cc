@@ -1,17 +1,22 @@
-#include <bits/stdc++.h>
-#include <climits>
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <set>
 using namespace std;
+
+
 int main() {
-   int N; cin >> N;
-   int arr[N];
-   
-   for(int i=0; i<N; i++){
-        cin >> arr[i];
-   }
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(0);
+	int N; cin >> N;
+	vector<int> num(N);
 
-   sort(arr,arr+N);
+	for (int i = 0; i < N; i++) cin >> num[i];
+	sort(num.begin(), num.end());
 
-   for(int i : arr){
-    printf("%d\n",i);
-   }
+	for (int i = 0; i < N; i++) {
+		cout << num[i] << '\n';
+	}
 }
