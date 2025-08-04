@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+int N, M;
+vector<bool> visited;
+vector<int> arr;
+set<vector<int>> result;
+
+void NM(int cur, vector<int> answer, int depth) {
+	if (depth == M) {
+
+		result.insert(answer);
+		return;
+	}
+
+	for (int i = cur; i < N; i++) {
+		if (visited[i]) continue;
+		visited[i] = true;
+		answer.push_back(arr[i]);
+		NM(i+1,answer, depth + 1);
+		visited[i] = false;
+		answer.pop_back();
+	}
+
+
+}
+int main() {
+	cin >> N >> M;
+	arr.resize(N, 0);
+	for (int i = 0; i < N; i++) {
+		cin >> arr[i];
+	}
+	
+	
+	sort(arr.begin(), arr.end());
+
+	visited.assign(arr.size(), false);
+
+	NM(0,{}, 0);
+
+	for (auto vec : result) {
+		for (int num : vec) {
+			cout << num << " ";
+		}
+		cout << '\n';
+	}
+}
