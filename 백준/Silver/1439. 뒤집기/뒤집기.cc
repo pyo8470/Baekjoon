@@ -9,25 +9,17 @@ int main() {
 	cout.tie(0);
 
 	string input; cin >> input;
-	vector<bool> arr;
-	for (char ch : input) {
-		arr.push_back(int(ch - '0'));
-	}
+	int count0 = 0, count1 = 0;
 
+	if (input[0] == '0') count0++;
+	else count1++;
 
-	bool start = arr[0];
-
-	int result = 0;
-	bool mode = false;
-	for (int i = 1; i < arr.size(); i++) {
-		if (start != arr[i]) {
-			if (mode) continue;
-			else result++;
-			mode = true;
-		}
-		else {
-			mode = false;
+	for (int i = 1; i < input.size(); i++) {
+		if (input[i] != input[i - 1]) {
+			if (input[i] == '0') count0++;
+			else count1++;
 		}
 	}
-	cout << result;
+
+	cout << min(count0, count1);
 }
