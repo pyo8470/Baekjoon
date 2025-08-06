@@ -27,7 +27,6 @@ int main() {
 		cin >> arr[i];
 	}
 	
-	sort(arr.begin(), arr.end());
 	visited.assign(arr.size(), false);
 	NM({}, 0);
 
