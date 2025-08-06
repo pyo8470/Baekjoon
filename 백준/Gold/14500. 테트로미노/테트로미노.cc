@@ -1,113 +1,89 @@
-#include <bits/stdc++.h>
-#include <climits>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 int N, M;
-vector<vector<pair<int, int>>> Iblock;
-vector<vector<pair<int, int>>> Oblock;
-vector<vector<pair<int, int>>> Lblock;
-vector<vector<pair<int, int>>> Sblock;
-vector<vector<pair<int, int>>> Tblock;
+vector<vector<int>> board;
 
-int find(int x, int y, vector<vector<int>> &board, vector<vector<pair<int, int>>> &block)
-{
-    int MAX = 0;
-    for (int i = 0; i < block.size(); i++)
-    {
+int getSum(int x, int y,vector<vector<pair<int, int>>> shape) {
+    
+    int ret = 0;
+    for (int i = 0; i < shape.size(); i++) {
         int sum = 0;
-        bool valid = true;
-        for (int j = 0; j < 4; j++)
-        {
+        for (pair<int, int> direction : shape[i]) {
+            int dx, dy;
+            dx = direction.second;
+            dy = direction.first;
+            
+            int nx, ny;
+            nx = x + dx;
+            ny = y + dy;
 
-            pair<int, int> dir = block[i][j];
-            int dx = dir.first, dy = dir.second;
-
-            int nx = x + dx, ny = y + dy;
-
-            if (nx < 0 || nx >= M || ny < 0 || ny >= N)
-            {
-                sum = 0;
-                break;
-            }
+            if (0 > nx || nx >= M || 0 > ny || ny >= N) continue;
+            
             sum += board[ny][nx];
         }
-        MAX = max(sum, MAX);
+        ret = max(sum, ret);
     }
-
-    return MAX;
+    return ret;
+    
 }
-int main()
-{
-
+int main() {
     cin >> N >> M;
-
-    vector<vector<int>> board(N, vector<int>(M));
-
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = 0; j < M; j++)
-        {
+    board.assign(N, vector<int>(M));
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
             cin >> board[i][j];
         }
     }
-    // I 블록 - > 시작점으로부터 아래로 1,2,3, 우로 1,2,3
-    Iblock = {{{0, 0}, {0, 1}, {0, 2}, {0, 3}},
-              {{0, 0}, {1, 0}, {2, 0}, {3, 0}}};
-    // O 블록 -> 시작점으로 부터 (1,0) (0,1) (1,1)
 
-    Oblock.push_back({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
-    // L 블록
-    /*
-        X O X         X   X
-          O           O O O
-        X O X         X   X
-    */
+    
+    // 모양에 따른 벡터
 
-    Lblock = {
-        {{0, 0}, {0, 1}, {0, 2}, {1, 2}},  // 회전 상태 0
-        {{0, 0}, {0, 1}, {0, 2}, {-1, 2}}, // 회전 상태 1
-        {{0, 0}, {0, 1}, {0, 2}, {-1, 0}}, // 회전 상태 2
-        {{0, 0}, {0, 1}, {0, 2}, {1, 0}},  // 회전 상태 3
+    vector<vector<pair<int, int>>> line = {
+        {{0,0},{0,1},{0,2},{0,3}},
+        {{0,0},{1,0},{2,0},{3,0}}
+    };
+    vector<vector<pair<int, int>>> square = {
+        {{0,0},{0,1},{1,0},{1,1}}
+    };
+    vector<vector<pair<int, int>>> Lshape = {
+        {{0,0},{1,0},{2,0},{2,1}}, // L
+        {{0,0},{0,1},{0,2},{-1,2}}, // 우측 90도
+        {{0,0},{-1,0},{-2,0},{-2,-1}}, // 180도
+        {{0,0},{0,-1},{0,-2},{1,-2}}, // 270도
 
-        {{0, 0}, {1, 0}, {2, 0}, {0, -1}}, // 회전 상태 4
-        {{0, 0}, {1, 0}, {2, 0}, {0, 1}},  // 회전 상태 5
-        {{0, 0}, {1, 0}, {2, 0}, {2, -1}}, // 회전 상태 6
-        {{0, 0}, {1, 0}, {2, 0}, {2, 1}}   // 회전 상태 7
+        // 대칭
+        {{0,0},{1,0},{2,0},{2,-1}}, // 
+        {{0,0},{0,1},{0,2},{1,2}}, // 우측 90도
+        {{0,0},{-1,0},{-2,0},{-2,1}}, // 180도
+        {{0,0},{0,-1},{0,-2},{-1,-2}} // 270도
+    };
+    vector<vector<pair<int, int>>> legShape = {
+        {{-1,0},{0,0},{0,1},{1,1}},
+        {{0,-1},{0,0},{-1,0},{-1,1}},
 
+        {{1,0},{0,0},{0,1},{-1,1}},
+        {{0,-1},{0,0},{1,0},{1,1}}
+    };
+    vector<vector<pair<int, int>>> fuckyouShape = {
+        {{0,0},{0,-1},{0,1},{1,0}}, // ㅜ
+        {{0,0},{-1,0},{1,0},{0,1}}, // ㅏ
+        {{0,0},{0,-1},{0,1},{-1,0}}, // ㅗ
+        {{0,0},{-1,0},{1,0},{0,-1}}, // ㅓ
     };
 
-    // S 블록 -> 시작점으로 부터 (1,0) (0,1) (1,1)
-    /*
-        X K
-        O O    X O K
-        K X    K O X
-    */
-
-    Sblock = {
-        {{0, 0}, {1, 0}, {1, -1}, {0, 1}},
-        {{0, 0}, {1, 0}, {0, -1}, {1, 1}},
-        {{0, 0}, {0, 1}, {1, 0}, {-1, 1}},
-        {{0, 0}, {0, 1}, {1, 1}, {-1, 0}}};
-
-    Tblock = {
-        {{0, 0}, {1, 0}, {2, 0}, {1, 1}},  // ㅜ
-        {{0, 0}, {1, 0}, {2, 0}, {1, -1}}, // ㅗ
-        {{0, 0}, {0, 1}, {0, -1}, {1, 0}}, // ㅏ
-        {{0, 0}, {1, 0}, {1, 1}, {1, -1}}  // ㅓ
-    };
-
-    int MAX = INT_MIN;
-
-    for (int y = 0; y < N; y++)
-    {
-        for (int x = 0; x < M; x++)
-        {
-            MAX = max(MAX, find(x, y, board, Iblock));
-            MAX = max(MAX, find(x, y, board, Oblock));
-            MAX = max(MAX, find(x, y, board, Lblock));
-            MAX = max(MAX, find(x, y, board, Sblock));
-            MAX = max(MAX, find(x, y, board, Tblock));
+    int result = 0;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            result = max(getSum(j, i, line),result);
+            result = max(getSum(j, i, square),result);
+            result = max(getSum(j, i, Lshape),result);
+            result = max(getSum(j, i, legShape),result);
+            result = max(getSum(j, i, fuckyouShape),result);
         }
     }
-    cout << MAX << endl;
+    cout << result;
 }
