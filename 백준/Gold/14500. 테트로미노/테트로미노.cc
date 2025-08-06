@@ -7,7 +7,7 @@ using namespace std;
 int N, M;
 vector<vector<int>> board;
 
-int getSum(int x, int y,vector<vector<pair<int, int>>> shape) {
+int getSum(int x, int y,vector<vector<pair<int, int>>> &shape) {
     
     int ret = 0;
     for (int i = 0; i < shape.size(); i++) {
