@@ -9,24 +9,10 @@ using namespace std;
 
 int N;
 int answer = 0;
-vector<int> queen;
-bool check(int col, int row) {
-	
-	for (int i = 0; i < N; i++) {
-		int Queen_row = queen[i];
-		// 같은 col은 안된다.
-		if (Queen_row >= 0){
-			// 가로
-			if (row == Queen_row) return false;
-			// 세로
-			if (col == i) return false;
-			// 대각선
-			if (abs(row - Queen_row) == abs(col - i)) return false;
-		}
-	}
+bool visited_row[15];      // 세로
+bool visited_diag1[30];    // ↘ 대각선 (col - row + N - 1)
+bool visited_diag2[30];    // ↗ 대각선 (row+col)
 
-	return true;
-}
 void N_Queen(int col) {
 	if (col== N) {
 		answer++; return;
@@ -34,18 +20,22 @@ void N_Queen(int col) {
 
 	for (int row = 0; row < N; row++) {
 		// 퀸이 depth행 i번째 열에 위치한다.
-		if (!check(col, row)) continue;
-        // 배치
-		queen[col] = row;
-		N_Queen(col+ 1);
-        // 배치 물림
-		queen[col] = -1;
+		if (visited_row[row]) continue;
+		if (visited_diag1[row - col + N - 1]) continue;
+		if (visited_diag2[row+col]) continue;
+
+		visited_row[row] = true;
+		visited_diag1[row - col + N - 1] = true;
+		visited_diag2[row+col] = true;
+		N_Queen(col + 1);
+
+		visited_row[row] = false;
+		visited_diag1[row - col + N - 1] = false;
+		visited_diag2[row+col] = false;
 	}
 }
 int main() {
 	cin >> N;
-	queen.resize(N, -1);
-
 	N_Queen(0);
 	cout << answer;
 }
