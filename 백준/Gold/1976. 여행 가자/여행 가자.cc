@@ -36,11 +36,13 @@ int main() {
 		cities.push_back(num);
 	}
 
-	for (int i = 0; i < M - 1; i++) {
-		for (int j = i + 1; j < M; j++) {
-			if (find(cities[i]) != find(cities[j])) {
-				cout << "NO"; return 0;
-			}
+	// 모든도시의 루트가 같은지 비교하면 됨.
+	int root = find(cities[0]);
+
+	for (int i = 1; i < M; i++) {
+		if (find(cities[i]) != root) {
+			cout << "NO";
+			return 0;
 		}
 	}
 	cout << "YES";
