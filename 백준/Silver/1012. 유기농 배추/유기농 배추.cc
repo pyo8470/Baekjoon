@@ -19,7 +19,6 @@ int bfs(const int& x, const int& y) {
 
 	deque<pair<int, int>> dq;
 	dq.push_back({ x,y });
-	visited[y][x] = true;
 
 	while (!dq.empty()) {
 		int cx = dq.front().first, cy = dq.front().second;
