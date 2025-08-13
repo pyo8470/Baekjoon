@@ -9,20 +9,22 @@ int N;
 vector<bool> visited(10000);
 string k = "DSLR";
 string bfs(int A , int B) {
-	queue<pis> q;
-	q.push({ A,"" });
+	queue<int> q;
+	vector<int> parent(10000, -1);
+	vector<char> result(10000,0);
+	q.push(A);
 
 	while (!q.empty()) {
-		pis current = q.front(); q.pop();
-		int num = current.first;
-		string st = current.second;
+		int num = q.front(); q.pop();
 		//cout << num << " " << st << '\n';
-		int dx[4] = { num * 2, num - 1,
+		int dx[4] = { num * 2 % 10000, 
+			num == 0 ? 9999 : num-1,
 			(num % 1000)*10 + num / 1000,
 			(num % 10) * 1000 + num / 10 };
+
 		visited[num] = true;
 		if (num == B) {
-			return st;
+			break;
 		}
 		for (int i=0; i<4; i++) {
 			int next = dx[i];
@@ -33,12 +35,20 @@ string bfs(int A , int B) {
 			if (visited[next]) continue;
 
 			visited[next] = true;
-			q.push({ next,st + k[i] });
+			parent[next] = num;
+			result[next] = k[i];
+			q.push(next);
 		}
 		//cout << '\n';
 
 	}
-	return "";
+	
+	string ret;
+	for (int cur = B; cur != A; cur = parent[cur]) {
+		ret.push_back(result[cur]);
+	}
+	reverse(ret.begin(), ret.end());
+	return ret;
 }
 int main() {
 	ios_base::sync_with_stdio(false);
