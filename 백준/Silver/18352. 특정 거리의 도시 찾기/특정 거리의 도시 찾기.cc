@@ -8,7 +8,7 @@ typedef pair<int, int> pii;
 int N, M, K, P;
 vector<vector<int>> adj;
 vector<bool> visited;
-priority_queue<int,vector<int>,greater<int>> result;
+vector<int> result;
 void bfs(const int& start) {
 	queue<pii> q;
 	q.push({ start,0 });
@@ -18,7 +18,7 @@ void bfs(const int& start) {
 		int node = cur.first;
 		int cost = cur.second;
 		if (cost == K) {
-			result.push(node);
+			result.push_back(node);
 		}
 		visited[node] = true;
 		for (int next : adj[node]) {
@@ -46,11 +46,11 @@ int main() {
 	visited[P] = true;
 	bfs(P);
 
+	sort(result.begin(), result.end());
 	if (result.empty()) {
 		cout << -1 << '\n';
 	}
-	while (!result.empty()) {
-		cout << result.top() << '\n';
-		result.pop();
+	for (int node : result) {
+		cout << node << '\n';
 	}
 }
