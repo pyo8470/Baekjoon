@@ -1,58 +1,57 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <climits>
-
+#include<iostream>
+#include<cstring>
+#include<queue>
+#include<vector>
+#define MAXV 20001
 using namespace std;
 
-struct val {
-	int weight, node;
-	bool operator> (const val& other) const {
-		return weight > other.weight;
+int V, E;
+int dijk[MAXV];
+vector<vector<pair<int,int>>> adj;
+bool visited[MAXV] = { false, };
+
+
+void dijkstra(int start) {
+	dijk[start] = 0;
+	priority_queue<pair<int, int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+
+	pq.push(make_pair(0,start));
+
+	while (!pq.empty()) {
+		int current = pq.top().second;
+		int distance = pq.top().first;
+
+		pq.pop();
+
+		if (dijk[current] < distance) continue;
+		for (int i = 0; i < adj[current].size(); i++) {
+
+			int next = adj[current][i].first;
+			int nextDistance = distance + adj[current][i].second;
+
+			if (nextDistance >= dijk[next]) continue;
+			dijk[next] = nextDistance;
+			pq.push({ nextDistance, next });
+		}
 	}
-};
+}
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-
-	int V, E, K;
-	cin >> V >> E >> K;
-	int u, v, w;
-	vector<vector<val>> graph(V + 1);
+	cin >> V >> E;
+	int K; cin >> K;
+	for (int i = 0; i < MAXV; i++) {
+		dijk[i] = 2e9; // 이렇게 반복문으로 초기화
+	}
+	adj.assign(V + 1, {});
 	for (int i = 0; i < E; i++) {
-		cin >> u >> v >> w;
-		graph[u].push_back({ w, v });
+		int s, e, w;
+		cin >> s >> e >> w;
+		adj[s].push_back({ e,w });
 	}
-
-	priority_queue<val, vector<val>, greater<>> pque;
-	vector<int> dist(V + 1, INT_MAX);
-	pque.push({ 0, K });
-	dist[K] = 0;
-
-	while (!pque.empty()) {
-		val now = pque.top();
-		pque.pop();
-
-		if (now.weight > dist[now.node]) {
-			continue;
-		}
-
-		for (auto next : graph[now.node]) {
-			if (dist[next.node] > dist[now.node] + next.weight) {
-				dist[next.node] = dist[now.node] + next.weight;
-				pque.push({ dist[next.node], next.node });
-			}
-		}
-	}
+	dijkstra(K);
 
 	for (int i = 1; i <= V; i++) {
-		if (dist[i] != INT_MAX)
-			cout << dist[i] << "\n";
-		else
-			cout << "INF\n";
+		if (dijk[i] == 2e9) cout << "INF" << "\n";
+		else cout << dijk[i] << "\n";
 	}
-
-	return 0;
 }
