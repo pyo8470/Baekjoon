@@ -1,14 +1,12 @@
 #include<iostream>
-#include<cstring>
+
 #include<queue>
 #include<vector>
-#define MAXV 20001
 using namespace std;
 
 int V, E;
-int dijk[MAXV];
+vector<int> dijk;
 vector<vector<pair<int,int>>> adj;
-bool visited[MAXV] = { false, };
 
 
 void dijkstra(int start) {
@@ -37,11 +35,11 @@ void dijkstra(int start) {
 }
 
 int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
 	cin >> V >> E;
 	int K; cin >> K;
-	for (int i = 0; i < MAXV; i++) {
-		dijk[i] = 2e9; // 이렇게 반복문으로 초기화
-	}
+	dijk.assign(V + 1,2e9);
 	adj.assign(V + 1, {});
 	for (int i = 0; i < E; i++) {
 		int s, e, w;
