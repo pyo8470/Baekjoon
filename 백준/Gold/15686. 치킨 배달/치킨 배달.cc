@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -13,7 +12,6 @@ struct cord {
 	int x, y;
 };
 int result = 2e9;
-vector<vector<int>> MAP;
 vector<cord> candidates;
 vector<cord> living;
 
@@ -34,10 +32,6 @@ int getDistance(vector<cord>& comb) {
 }
 void combination(const int& depth, const int& idx, vector<cord>& comb) { // 모든 역에 대한 조합 생성
 	if (depth == M) {
-		/*cout << "조합 : " << '\n';
-		for (int i = 0; i < comb.size(); i++) {
-			cout << comb[i].x << " " << comb[i].y << " | ";
-		}cout << '\n';*/
 		result = min(getDistance(comb), result); // 조합에 대한 최소 거리
 		return;
 	}
@@ -56,21 +50,18 @@ int main()
 	cin >> N >> M;
 
 	// 조합 + bfs
-	MAP.assign(N, vector<int>(N));
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
-			cin >> MAP[i][j];
-			if (MAP[i][j] == 2) {
+			int num; cin >> num;
+			if (num == 2) {
 				candidates.push_back({ j,i });
 			}
-			else if (MAP[i][j] == 1) {
+			else if (num == 1) {
 				living.push_back({ j,i });
 			}
 		}
 	}
 
-	vector<bool> visited;
-	visited.assign(candidates.size(), false);
 	vector<cord> comb;
 	combination(0, 0, comb);
 	cout << result;
