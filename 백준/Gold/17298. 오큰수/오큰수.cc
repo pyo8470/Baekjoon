@@ -1,36 +1,46 @@
-#include <iostream>
-using namespace std;
-#include <string>
-#include <vector>
-#include <stack>
+#define _CRT_SECURE_NO_WARNINGS
 
-int main() {
-	ios_base::sync_with_stdio(0);
+#include<iostream>
+#include<stack>
+#include<vector>
+#define MAX_LEN 1000
+using namespace std;
+typedef long long ll;
+
+
+int N, M;
+
+
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
 	cin.tie(0);
 	cout.tie(0);
 
-	int n; cin >> n;
-	
-	vector<int> a(n,-1);
+	cin >> N;
+	vector<int> arr(N,0);
+	for (int i = 0; i < N; i++)cin >> arr[N - i - 1];
+	vector<int> result(N,0);
+	result[N - 1] = -1;
 
-	vector<int> result(n, -1);
-	for (int i = 0; i < n; i++) {
-		cin >> a[i];
-	}
-	
-	// 숫자, 인덱스
-	stack<pair<int,int>> st;
-	st.push({a[0],0});
-	for (int i = 1; i < n; i++) {
 
-		while (!st.empty() && st.top().first < a[i]) {
-			result[st.top().second] = a[i];
-			st.pop();
+	stack<int> st;
+	st.push(arr[0]);
+	for (int i = 1; i < N; i++) {
+		if (arr[i] < st.top()) result[N - i - 1] = st.top();
+		else {
+			while (!st.empty() && st.top() <= arr[i]) {
+				st.pop();
+			}
+			result[N - i - 1] = (st.empty()) ? -1 : st.top();
 		}
-		st.push({ a[i],i });
+		st.push(arr[i]);
 	}
 
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < N; i++) {
 		cout << result[i] << " ";
 	}
+	return 0;
 }
+
