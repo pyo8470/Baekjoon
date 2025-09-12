@@ -1,49 +1,55 @@
-#include <iostream>
-#include <vector>
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<iostream>
+
+#define MAX_LEN 200
 using namespace std;
 
-int parent[201];
-int matrix[201][201];
-int find(int x) {
-	if (parent[x] == x) return x; // 부모
+int parent[MAX_LEN];
+/*
+	여행가자 : 유니온 파인드
+*/
+int N, M;
+int find(const int &x) {
+	if (x == parent[x]) return x;
 	return parent[x] = find(parent[x]);
 }
-void union_set(int a, int b) {
-	a = find(a);
-	b = find(b);
 
-	if (a != b) parent[a] = b;
-}
-int main() {
-	int N; cin >> N;
-	int M; cin >> M;
+void merge(const int&a, const int&b) {
+	int A = find(a);
+	int B = find(b);
 
-	for (int i = 1; i < N; i++) parent[i] = i;
-
+	if (A == B) return;
 	
-	for (int i = 1; i <= N; i++) {
-		for (int j = 1; j <= N; j++) {
-			cin >> matrix[i][j];
-			if (matrix[i][j] == 1) {
-				union_set(i, j);
-			}
+	parent[A] = B;
+}
+int main()
+{
+
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> N >> M;
+	for (int i = 0; i < N; i++) parent[i] = i;
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			int connected; cin >> connected;
+			if (connected) merge(i, j);
 		}
 	}
 
-	vector<int> cities;
-	for (int i = 0; i < M; i++) {
-		int num; cin >> num;
-		cities.push_back(num);
-	}
-
-	// 모든도시의 루트가 같은지 비교하면 됨.
-	int root = find(cities[0]);
-
+	int prev; cin >> prev;
+	int next;
 	for (int i = 1; i < M; i++) {
-		if (find(cities[i]) != root) {
-			cout << "NO";
-			return 0;
+		cin >> next;
+		if (find(prev-1) != find(next-1)) {
+			cout << "NO"; return 0;
 		}
+		prev = next;
 	}
 	cout << "YES";
+	return 0;
 }
+
