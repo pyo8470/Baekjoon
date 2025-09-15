@@ -17,19 +17,12 @@ struct State{
 };
 deque<State> belt;
 
-void print() {
-	cout << "print()" << '\n';
-	for (State& cur : belt) {
-		cout << "내구도 : " << cur.dur << " robot : " << cur.robot << '\n';
-	}cout << '\n';
-}
 int main()
 {
 	ios_base::sync_with_stdio(false);
 	cin.tie(0);
 	cout.tie(0);
 	cin >> N >> K;
-	// 시작점을 잡아야하는데
 	
 	for (int i = 0; i < 2 * N; i++) {
 		int dur; cin >> dur;
@@ -39,19 +32,14 @@ int main()
 	while (true) {
 		// 벨트 회전
 		ans++;
-		/*cout << "단계 " << ans << '\n';
-		print();*/
 
 		belt.push_front(belt.back());
 		belt.pop_back();
 		// 내리는 위치
 		if (belt[N - 1].robot) belt[N - 1].robot = false;
-		/*cout << "회전 후" << "\n";
-		print();*/
 
 
 		// 로봇 움직임
-		
 		for (int i = 2 * N - 1; i >= 0; i--) {
 			if (!belt[i].robot) continue;
 			int next_idx = (i + 1) % (2 * N);
@@ -64,14 +52,11 @@ int main()
 			if(next_idx == N-1) belt[next_idx].robot = false;
 			belt[i].robot = false;
 		}
-		/*cout << "로봇 움직임 후" << "\n";
-		print();*/
 
 		if (belt[0].dur != 0) {
 			belt[0].robot = true;
 			belt[0].dur = max(0, belt[0].dur - 1);
 		}
-		//print();
 
 		int broken = 0;
 		for (int i = 0; i < 2 * N; i++) {
