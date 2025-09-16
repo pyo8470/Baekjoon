@@ -1,50 +1,61 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <climits>
-#include <algorithm>
-#define DIR 4
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#define MAX_LEN 1001
 using namespace std;
 typedef pair<int, int> pii;
 
 int V, E;
-vector<bool> visited;
-vector<vector<pii>> edges;
-int kruskal() {
-	priority_queue<pii, vector<pii>, greater<pii>> pq;
-	pq.push({ 0,1 });
-	
-	int answer = 0;
-	while (!pq.empty()) {
-		pii current = pq.top(); pq.pop();
-		
-		int w = current.first, node = current.second;
-		if (visited[node]) continue;
-		visited[node] = true;
-		/*count++;
-		cout << s << " " << w << '\n';*/
-		answer += w;
-		for (pii next : edges[node]) {
-			int nv = next.second;
-			int nw = next.first;
-			pq.push({nw,nv });
-		}
-	}
-	return answer;
+int parent[10001];
+int find(int x) {
+	if (x == parent[x]) return x;
+	return parent[x] = find(parent[x]);
 }
-int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
 
-	cin >> V >> E;
-	edges.assign(V + 1, {});
-	visited.assign(V + 1, false);
+void merge(int a, int b) {
+	int A = find(a);
+	int B = find(b);
+
+	if (A == B) return;
+	parent[A] = B;
+}
+
+struct Edge {
+	int s, e, w;
+};
+vector<Edge> adj;
+
+int kruskal() {
+	int ret = 0;
+	for (Edge& cur : adj) {
+		int u = cur.s, v = cur.e, w = cur.w;
+		if (find(u) == find(v)) continue;
+		merge(u, v);
+		ret += w;
+	}
+	return ret;
+}
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
 	
+	
+	cin >> V >> E;
+	for (int i = 1; i <= V; i++) parent[i] = i;
 	for (int i = 0; i < E; i++) {
 		int s, e, w; cin >> s >> e >> w;
-		edges[s].push_back({ w,e });
-		edges[e].push_back({ w,s });
+		adj.push_back({ s,e,w });
 	}
+
+
+	sort(adj.begin(), adj.end(), [](const Edge& a, const Edge& b) {
+		return a.w < b.w;
+		});
+
+	
 	cout << kruskal();
 }
