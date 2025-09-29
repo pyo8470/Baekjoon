@@ -6,10 +6,12 @@ using namespace std;
 
 const int INF = 2e9;
 int V, E;
+
 struct Edge {
 	int to, wei;
 };
 vector<vector<Edge>> adj;
+vector<vector<int>> matrix;
 
 struct State {
 	int dist, node;
@@ -45,28 +47,28 @@ int main() {
 	cin.tie(NULL);
 
 	cin >> V >> E;
+	matrix.assign(V + 1, vector<int>(V + 1, INF));
 	adj.assign(V + 1, { });
+
 	for (int i = 0; i < E; i++) {
 		int s, e, w;
 		cin >> s >> e >> w;
 		adj[s].push_back( { e, w });
+		matrix[s][e] = w;
 	}
 
 	int ans = INF;
 	for (int i = 1; i <= V; i++) {
-		vector<int> dist = dijkstra(i); // i → *
+		vector<int> dist = dijkstra(i);
 		for (int v = 1; v <= V; v++) {
 			if (v == i)
 				continue;
 			if (dist[v] == INF)
 				continue;
+			if (matrix[v][i] == INF)
+				continue; // v → i 간선 없음
 
-			// v에서 다시 i로 오는 간선이 있어야 사이클 완성
-			for (auto e : adj[v]) {
-				if (e.to == i) {
-					ans = min(ans, dist[v] + e.wei);
-				}
-			}
+			ans = min(ans, dist[v] + matrix[v][i]);
 		}
 	}
 
