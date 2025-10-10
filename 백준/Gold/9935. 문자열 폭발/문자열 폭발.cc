@@ -10,20 +10,15 @@ string result;
 void checkBomb() {
 
     string check = "";
-    int end = result.size();
+    int end = result.size()-1;
     int start = result.size() - bomb.length();
 
-    if (start < 0 || result.empty()) return;
-
-    for (int i = end; i > start; i--) {
-        check = result.back() + check;
-        result.pop_back();
-
+    for (int i = end; i >= start; i--) {
+        check = result[i] + check;
     }
-    if (check == bomb) return;
-
-    for (char c : check) result.push_back(c);
-    return;
+    if (check != bomb) return; 
+    for (int i = 0; i < bomb.size(); i++) result.pop_back();
+    
 }
 
 int main() {
@@ -38,7 +33,8 @@ int main() {
     for (int i = 0; i < s.length(); i++) {
         result.push_back(s[i]);
 
-        if (result.back() == bomb[bomb.length() - 1]) {
+        if (result.back() == bomb[bomb.length() - 1] 
+            && result.size() >= bomb.size()) {
             checkBomb();
         }
     }
