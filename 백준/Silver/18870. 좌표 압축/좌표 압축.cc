@@ -14,9 +14,10 @@ void init() {
 }
 
 void solve() {
-    set<int> s(arr.begin(), arr.end());      // 자동 정렬 + 중복 제거
-    vector<int> sorted(s.begin(), s.end());  // vector로 변환 (random access 가능)
+    vector<int> sorted = arr;  // vector로 변환 (random access 가능)
 
+    sort(sorted.begin(), sorted.end());
+    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end());
     for (int i = 0; i < N; i++) {
         int rank = lower_bound(sorted.begin(), sorted.end(), arr[i]) - sorted.begin();
         cout << rank << ' ';
