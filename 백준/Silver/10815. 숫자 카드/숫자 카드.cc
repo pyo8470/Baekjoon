@@ -9,12 +9,12 @@ int main() {
 
     int N;
     cin >> N;
-    unordered_set<int> cards;
+    unordered_map<int, int> cards;
     cards.reserve(500005);
     for (int i = 0; i < N; i++) {
         int c;
         cin >> c;
-        cards.insert(c);
+        cards[c] = 1;
     }
 
     int M;
