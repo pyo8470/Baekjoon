@@ -4,15 +4,18 @@
 using namespace std;
 
 // 열, 행 ,3x3 박스에 들어 있는 수들
-vector<unordered_set<int>> cols;
-vector<unordered_set<int>> rows;
-vector<unordered_set<int>> boxes;
 
-vector<vector<int>> sudoku;
-
-vector<pair<int, int>> zeros;
 bool found = false;
 int N = 9;
+void print(vector<unordered_set<int>> &sub) {
+    for (auto &s : sub) {
+        for (auto it = s.begin(); it != s.end(); it++) {
+            cout << *it << " ";
+        }
+        cout << '\n';
+    }
+    cout << '\n';
+}
 void print_sudoku(vector<vector<int>> &sudoku) {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -23,7 +26,7 @@ void print_sudoku(vector<vector<int>> &sudoku) {
 }
 
 void dfs(const int &depth, vector<vector<int>> &sudoku, vector<unordered_set<int>> &cols,
-         vector<unordered_set<int>> &rows, vector<unordered_set<int>> &boxes) {
+         vector<unordered_set<int>> &rows, vector<unordered_set<int>> &boxes, vector<pair<int, int>> &zeros) {
     if (found)
         return;
     if (depth == zeros.size()) {
@@ -36,18 +39,14 @@ void dfs(const int &depth, vector<vector<int>> &sudoku, vector<unordered_set<int
     int x = cord.first, y = cord.second;
     int box_idx = (y / 3) * 3 + x / 3;
     for (int i = 1; i <= 9; i++) {
-        if (cols[x].find(i) != cols[x].end())
-            continue;
-        if (rows[y].find(i) != rows[y].end())
-            continue;
-        if (boxes[box_idx].find(i) != boxes[box_idx].end())
+        if (rows[y].count(i) || cols[x].count(i) || boxes[box_idx].count(i))
             continue;
 
         sudoku[y][x] = i;
         cols[x].insert(i);
         rows[y].insert(i);
         boxes[box_idx].insert(i);
-        dfs(depth + 1, sudoku, cols, rows, boxes);
+        dfs(depth + 1, sudoku, cols, rows, boxes, zeros);
         boxes[box_idx].erase(i);
         rows[y].erase(i);
         cols[x].erase(i);
@@ -58,6 +57,14 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+    vector<unordered_set<int>> cols;
+    vector<unordered_set<int>> rows;
+    vector<unordered_set<int>> boxes;
+
+    vector<vector<int>> sudoku;
+
+    vector<pair<int, int>> zeros;
 
     sudoku.resize(N, vector<int>(N));
 
@@ -81,5 +88,5 @@ int main() {
         }
     }
 
-    dfs(0, sudoku, cols, rows, boxes);
+    dfs(0, sudoku, cols, rows, boxes, zeros);
 }
