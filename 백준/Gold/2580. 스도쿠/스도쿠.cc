@@ -38,7 +38,7 @@ void dfs(const int &depth, vector<vector<int>> &sudoku, vector<unordered_set<int
     for (int i = 1; i <= 9; i++) {
         if (cols[x].find(i) != cols[x].end())
             continue;
-        if (rows[y].find(i) != rows[x].end())
+        if (rows[y].find(i) != rows[y].end())
             continue;
         if (boxes[box_idx].find(i) != boxes[box_idx].end())
             continue;
