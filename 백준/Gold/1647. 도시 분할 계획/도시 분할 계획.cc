@@ -12,13 +12,13 @@ struct edge {
 vector<edge> adj;
 vector<int> parent;
 vector<int> u_size;
-int find(const int &x) {
+inline int find(const int &x) {
     if (x == parent[x])
         return parent[x];
     return parent[x] = find(parent[x]);
 }
 
-void merge(int a, int b) {
+inline void merge(const int &a, const int &b) {
     int A = find(a);
     int B = find(b);
 
