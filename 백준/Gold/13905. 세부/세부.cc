@@ -28,13 +28,13 @@ void init() {
         adj.push_back({u, v, w});
     }
 }
-int find(int x) {
+int find(const int& x) {
     if (x == parent[x])
         return parent[x];
     return parent[x] = find(parent[x]);
 }
 
-void merge(int a, int b) {
+void merge(const int& a, const int& b) {
     int A = find(a);
     int B = find(b);
 
@@ -58,7 +58,7 @@ int main() {
 
     int MIN = 2e9;
     for (edge &ed : adj) {
-        auto [u, v, w] = ed;
+        auto &[u, v, w] = ed;
 
         if (find(u) == find(v))
             continue;
