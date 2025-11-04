@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <queue>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 using namespace std;
@@ -16,7 +17,7 @@ int zero_idx;
 bool visited[1000][1000];
 vector<vector<int>> num_MAP;
 // 서로 연결되있는 0끼리..
-void bfs(int sx, int sy) {
+void bfs(const int& sx, const int& sy) {
     queue<pair<int, int>> q;
     q.push({sx, sy});
 
@@ -44,7 +45,7 @@ void bfs(int sx, int sy) {
 
     zero_count.push_back(cnt);
 }
-int solve(const int& x, const int& y) {
+inline int solve(const int& x, const int& y) {
     unordered_set<int> a_num_set;
     int ret = 1;
     for (int i = 0; i < 4; i++) {
@@ -66,6 +67,7 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    
     cin >> N >> M;
     MAP.resize(N);
     memset(visited, 0, sizeof(visited));
@@ -85,7 +87,6 @@ int main() {
         }
     }
 
-    
     for (int y = 0; y < N; y++) {
         for (int x = 0; x < M; x++) {
             if (MAP[y][x] == '1') {
