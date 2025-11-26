@@ -1,72 +1,91 @@
 #include <iostream>
+#include <queue>
 #include <vector>
-#include <deque>
 using namespace std;
 
 int N, M;
-vector<vector<int>> MAP;
-vector<vector<vector<bool>>> visited;
-int dx[4] = { 0,0,-1,1 };
-int dy[4] = { -1,1,0,0 };
-struct State
-{
-	int x, y, count;
-	bool broken;
-};
+int MAP[1000][1000];
+bool visit[1000][1000][2];
 
-void init() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-
+void input() {
 	cin >> N >> M;
-	MAP.assign(N, vector<int>(M));
-	visited.assign(N, vector<vector<bool>>(M, vector<bool>(2, false)));
-	for (int i = 0; i < N; i++) {
-		string input; cin >> input;
-		for (int j = 0; j < M; j++) {
-			MAP[i][j] = (input[j] - '0');
+	for (int x = 0; x < N; ++x) {
+		string input;
+		cin >> input;
+		for (int y = 0; y < M; ++y) {
+			MAP[x][y] = input[y] - '0';
 		}
 	}
+
 }
 
-int bfs() {
-	deque<State> dq = { {0,0,0,false} };
-	int result = 2e9;
+typedef struct {
+	int x;
+	int y;
+	bool chance;
+	int dist;
+}Node;
 
-	while (!dq.empty()) {
-		State cur = dq.front(); dq.pop_front();
+int dx[] = { -1, 1, 0, 0 };
+int dy[] = { 0, 0, -1, 1 };
 
-		int x, y, count; bool broken;
-		x = cur.x, y = cur.y, count = cur.count, broken = cur.broken;
+int BFS() {
 
-		//cout << x << " " << y << '\n';
-		if (x == M - 1 && y == N - 1) {
-			result = min(count+1, result);
-			continue;
+
+	queue<Node> q;
+	q.push({ 0, 0, true, 1 });
+
+
+	visit[0][0][0] = true;
+
+	while (!q.empty()) {
+		Node e = q.front();
+		q.pop();
+
+		int c_x = e.x;
+		int c_y = e.y;
+		bool chance = e.chance;
+		int c_dist = e.dist;
+
+		if (c_x == N - 1 && c_y == M - 1) {
+			return c_dist;
 		}
-		if (count >= result) continue;
-		visited[y][x][broken] = true;
 
-		int nx, ny;
-		for (int i = 0; i < 4; i++) {
-			nx = x + dx[i], ny = y + dy[i];
+		for (int d = 0; d < 4; ++d) {
+			int n_x = c_x + dx[d];
+			int n_y = c_y + dy[d];
+			if (n_x < 0 || n_x >= N || n_y < 0 || n_y >= M) continue;
 
-			if (nx < 0 || ny < 0 || nx >= M || ny >= N || visited[ny][nx][broken]) continue;
-			if (broken && MAP[ny][nx] == 1) continue;
-			if (MAP[ny][nx] == 1 && !broken) {
-				dq.push_back({ nx,ny,count + 1, !broken });
+			//다음이 벽
+			if (MAP[n_x][n_y] == 1) {
+				if (visit[n_x][n_y][chance]) continue;
+				if (not chance) continue;
+
+				q.push({ n_x, n_y, false, c_dist + 1 });
+				visit[n_x][n_y][1] = true;
+				
 			}
+			// 다음이 그냥 통로
 			else {
-				dq.push_back({ nx,ny,count + 1,broken });
+				if (visit[n_x][n_y][chance]) continue;
+
+				q.push({ n_x, n_y, chance, c_dist + 1 });
+				visit[n_x][n_y][chance] = true;
 			}
-			visited[ny][nx][broken] = true;
 		}
 	}
-	return result == 2e9 ? -1 : result;
-}
-int main() {
-	init();
 
-	cout << bfs();
+
+	return -1;
+
 }
+
+int main() {
+
+	input();
+
+	cout << BFS() << endl;
+
+	return 0;
+}
+
