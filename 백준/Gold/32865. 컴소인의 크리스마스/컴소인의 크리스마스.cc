@@ -1,69 +1,73 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<int> try_count;
-// 맞기 전 카운트 세보기?
-// 테케는 현재 가능한 X나 O카운트가 큰 것 중에 번호가 큰걸 기준으로 한듯
-// 이제 맞을 차례의 vector들과 아직 맞지 않은 집합들(X의 카운트가 크고, 같다면 번호가 같아야함)
-struct wrong{
+// 맞기 전 상태를 관리하는 구조체
+struct Candidate {
     int id, remain;
-    const bool operator<(const wrong& other) const{
-        if(remain != other.remain) return remain > other.remain;
-        return id > other.remain;
+
+    // remain이 큰 순, 같다면 id가 큰 순 (Greedy 조건)
+    bool operator<(const Candidate& other) const {
+        if (remain != other.remain) return remain < other.remain; // priority_queue는 기본이 Max-Heap이므로 < 사용
+        return id < other.id;
     }
 };
 
-
 int N;
-set<wrong> wrong_set;
-queue<int> correct;
+priority_queue<Candidate> wrong_pq; // 아직 더 틀려야 하는 그룹
+queue<int> ready_q;                 // 이제 맞을 준비가 된(remain=0) 그룹
 vector<int> answer;
-bool solution(){
-    for(int i=1; i<=2*N-1; i++){
-        if(i%2 == 1){
-            // 없다면 실패
-            if(correct.empty()){
-                return false;
+
+bool solve() {
+    for (int i = 1; i <= 2 * N - 1; i++) {
+        if (i % 2 == 1) { // 홀수 번째: 'O' (맞아야 함)
+            if (ready_q.empty()) return false;
+            
+            answer.push_back(ready_q.front());
+            ready_q.pop();
+        } 
+        else { // 짝수 번째: 'X' (틀려야 함)
+            if (wrong_pq.empty()) return false;
+
+            Candidate target = wrong_pq.top();
+            wrong_pq.pop();
+
+            answer.push_back(target.id);
+            target.remain--;
+
+            if (target.remain == 0) {
+                ready_q.push(target.id);
+            } else {
+                wrong_pq.push(target);
             }
-            // 있다면
-            answer.push_back(correct.front());
-            correct.pop();
-        }else{
-            if(wrong_set.empty()){
-                return false;
-            }
-            auto target_it = wrong_set.begin();
-            int tid = target_it->id;
-            int remain = target_it->remain - 1;
-            wrong_set.erase(target_it);
-            answer.push_back(tid);
-            if(remain !=0) wrong_set.insert({tid,remain});
-            else{correct.push(tid);}
         }
     }
     return true;
 }
+
 int main() {
+    // 입출력 최적화
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    cout.tie(nullptr);  
 
-    cin >> N;
-    try_count.assign(N,0);
-    for(int i=0; i<N; i++){
-        cin >> try_count[i];
-        if(try_count[i] == 0) correct.push(i+1);
-        else wrong_set.insert({i+1,try_count[i]});
+    if (!(cin >> N)) return 0;
+
+    answer.reserve(2 * N - 1);
+
+    for (int i = 1; i <= N; i++) {
+        int cnt;
+        cin >> cnt;
+        if (cnt == 0) {
+            ready_q.push(i);
+        } else {
+            wrong_pq.push({i, cnt});
+        }
     }
 
-    // 홀수 -> O
-    // 짝수 -> X
-    
-    if(solution()){
-        for(auto &id : answer){
-            cout << id << '\n';
+    if (solve()) {
+        for (const int& id : answer) {
+            cout << id << "\n";
         }
-    }else{
+    } else {
         cout << -1;
     }
 
