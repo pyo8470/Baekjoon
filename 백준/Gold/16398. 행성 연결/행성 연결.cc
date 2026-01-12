@@ -5,9 +5,10 @@ using namespace std;
     제국 내 모든 행성을 연결하면서 유지 비용이 최소? MST
     간선이 많으니 Prim 씁시디
 */
+const int MAX = 1001;
 int N;
-vector<vector<int>> matrix;
-
+int matrix[MAX][MAX];
+bool visited[MAX];
 struct edge{
     int w,v;
 
@@ -17,10 +18,10 @@ struct edge{
     }
 };
 long long prim(){
-    vector<bool> visited(N,false);
+    memset(visited,false,sizeof(visited));
     priority_queue<edge> pq;
     pq.push({0,0});
-
+    
     int edge_count = 0;
     long long ret = 0;
     while(!pq.empty()){
@@ -48,7 +49,7 @@ long long prim(){
 }
 void solve(){
     cin >> N;
-    matrix.assign(N,vector<int>(N,0));
+    // memset(matrix,0,sizeof(matrix));
     for(int i=0; i<N; i++){
         for(int j=0; j<N; j++){
             cin >> matrix[i][j];
