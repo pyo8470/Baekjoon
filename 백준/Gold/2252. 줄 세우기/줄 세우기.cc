@@ -16,8 +16,7 @@ void solve(){
     }
 
     // vector<int> result(N+1,0);
-    
-    for(int i=1; i<=N; i++){
+    while(!q.empty()){
         int node = q.front(); q.pop();
         cout << node << " ";
         for(int next : adj[node]){
