@@ -1,47 +1,70 @@
-#include <bits/stdc++.h>
+#include<vector>
+#include<queue>
+#include<iostream>
+#include<cstring>
+#include<unordered_set>
 using namespace std;
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+const int MAX_N = 1000;
+int N, K;
+int build_time[MAX_N+1];
+vector<vector<int>> adj;
+vector<int> indeg, dist;
+queue<int> q;
+int target;
 
-    int T;
-    cin >> T;
-    while (T--) {
-        int N, K;
-        cin >> N >> K;
+void init(){
+    cin >> N >> K;
+   
+    adj.assign(N+1,{});
+    indeg.assign(N+1,0);
+    dist.assign(N+1,0);
 
-        vector<long long> D(N + 1), dp(N + 1, 0);
-        for (int i = 1; i <= N; i++) cin >> D[i];
+    memset(build_time,0,sizeof(build_time));
+    for(int i=0; i<N; i++){
+        cin >> build_time[i+1];
+    }
+    
+    for(int i=0; i<K; i++){
+        int start, end;
+        cin >> start >> end;
+        adj[start].push_back(end);
+        indeg[end]++;
+    }
+    cin >> target;
+}
 
-        vector<vector<int>> adj(N + 1);
-        vector<int> indeg(N + 1, 0);
+int solve(){
+    for(int i=1; i<=N; i++){
+        dist[i] = build_time[i];
+        if(indeg[i] == 0) q.push(i);
+    }
 
-        for (int i = 0; i < K; i++) {
-            int X, Y;
-            cin >> X >> Y;
-            adj[X].push_back(Y);
-            indeg[Y]++;
-        }
-
-        int W;
-        cin >> W;
-
-        queue<int> q;
-        for (int i = 1; i <= N; i++) {
-            dp[i] = D[i];
-            if (indeg[i] == 0) q.push(i);
-        }
-
-        while (!q.empty()) {
-            int u = q.front(); q.pop();
-            for (int v : adj[u]) {
-                dp[v] = max(dp[v], dp[u] + D[v]);
-                if (--indeg[v] == 0) q.push(v);
+    while (!q.empty())
+    {
+        int node = q.front(); q.pop();
+        for(int nxt : adj[node]){
+            dist[nxt] = max(dist[nxt],dist[node] + build_time[nxt]);
+            if(--indeg[nxt] == 0){
+                q.push(nxt);
             }
         }
-
-        cout << dp[W] << "\n";
     }
+    
+    return dist[target];
+
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    int T; cin >> T;
+    while(T--){
+        init();
+        cout << solve() << '\n';
+    }
+
+
     return 0;
 }
